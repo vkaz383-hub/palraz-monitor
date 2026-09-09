@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <title>PALRAZ Monitor</title>
+  <style>
+    :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f8fafc; --text-muted: #94a3b8; --border: #334155; --green: #22c55e; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 16px; display: flex; justify-content: center; }
+    .container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 14px; }
+    .header { display: flex; justify-content: space-between; align-items: center; }
+    .header h1 { font-size: 1.3rem; font-weight: 800; color: var(--accent); letter-spacing: 1px; }
+    .lang-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; cursor: pointer; }
+    
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .stats-row { display: flex; justify-content: space-between; align-items: baseline; }
+    .stat-val { font-size: 2.2rem; font-weight: 800; color: var(--green); }
+    .stat-label { font-size: 0.85rem; color: var(--text-muted); }
+
+    .chart-container { position: relative; width: 100%; height: 160px; margin-top: 4px; }
+    canvas { width: 100%; height: 100%; }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .cat-box { background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; gap: 4px; }
+    .cat-title { font-size: 0.78rem; color: var(--text-muted); }
+    .cat-val { font-size: 1.4rem; font-weight: 700; color: #fff; }
+    .cat-sub { font-size: 0.7rem; color: var(--accent); }
+
+    .manual-row { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; padding-top: 6px; border-top: 1px dashed var(--border); }
+    .btn-step { background: var(--border); color: #fff; border: none; width: 26px; height: 26px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+
+    .actions { display: flex; gap: 8px; margin-top: 4px; }
+    .action-btn { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .btn-share { background: #25d366; color: #fff; }
+    .btn-print { background: var(--accent); color: #000; }
+    @media print { body { background: #fff; color: #000; } .actions, .lang-btn, .btn-step { display: none; } .card, .cat-box { border: 1px solid #ccc; } }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>PALRAZ</h1>
+    <button class="lang-btn" onclick="toggleLang()">RU / עב</button>
+  </div>
+
+  <div class="card">
+    <div class="stats-row">
+      <div>
+        <div class="stat-label" id="ui-total-label">סה"כ סטים יוצרו</div>
+        <div class="stat-val" id="total-sets-val">0</div>
+      </div>
+      <div style="text-align: left;">
+        <div class="stat-label" id="ui-shift-label">טוען נתונים...</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);" id="ui-parts-label">0 חלקים</div>
+      </div>
+    </div>
+    <div class="chart-container"><canvas id="perfChart"></canvas></div>
+  </div>
+
+  <div class="grid">
+    <div class="cat-box">
+      <div class="cat-title" id="t-doors">דלתות</div>
+      <div class="cat-val"><span id="v-doors-sets">0</span> <span style="font-size:0.8rem;">סטים</span></div>
+      <div class="cat-sub"><span id="v-doors-parts">0</span> חלקים (÷2)</div>
+    </div>
+    <div class="cat-box">
+      <div class="cat-title" id="t-doors-mmd">דלתות ממ"ד</div>
+      <div class="cat-val"><span id="v-doors-mmd-sets">0</span> <span style="font-size:0.8rem;">סטים</span></div>
+      <div class="cat-sub"><span id="v-doors-mmd-parts">0</span> חלקים (÷2)</div>
+    </div>
+    <div class="cat-box">
+      <div class="cat-title" id="t-mash-mas">משקופי מסגרות</div>
+      <div class="cat-val"><span id="v-mash-mas-sets">0</span> <span style="font-size:0.8rem;">סטים</span></div>
+      <div class="cat-sub"><span id="v-mash-mas-parts">0</span> חלקים (÷3)</div>
+    </div>
+    <div class="cat-box">
+      <div class="cat-title" id="t-mash-mmd">משקופי ממ"ד</div>
+      <div class="cat-val"><span id="v-mash-mmd-sets">0</span> <span style="font-size:0.8rem;">סטים</span></div>
+      <div class="cat-sub"><span id="v-mash-mmd-parts">0</span> חלקים (÷3)</div>
+    </div>
+    <div class="cat-box">
+      <div class="cat-title" id="t-hipuy">פח חיפוי / חלון</div>
+      <div class="cat-val"><span id="v-hipuy-sets">0</span> <span style="font-size:0.8rem;">יח'</span></div>
+      <div class="cat-sub"><span id="v-hipuy-parts">0</span> חלקים (1:1)</div>
+    </div>
+    <div class="cat-box">
+      <div class="cat-title" id="t-misg">מסגרות (S4/ידני)</div>
+      <div class="cat-val"><span id="val-misg">0</span> <span style="font-size:0.8rem;">יח'</span></div>
+      <div class="manual-row">
+        <span style="font-size:0.7rem; color:var(--text-muted);" id="t-man">ידני:</span>
+        <div>
+          <button class="btn-step" onclick="adjustManual(-5)">-5</button>
+          <button class="btn-step" onclick="adjustManual(5)">+5</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="action-btn btn-share" onclick="shareWhatsApp()"><span>WhatsApp</span> 📲</button>
+    <button class="action-btn btn-print" onclick="window.print()"><span id="ui-print">הדפסה / PDF</span> 🖨️</button>
+  </div>
+</div>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+
+  let currentLang = 'he';
+  let reportData = null;
+  let manualOffset = parseInt(localStorage.getItem('palraz_manual_misg') || '0');
+
+  const i18n = {
+    he: {
+      dir: 'rtl', total: 'סה"כ סטים יוצרו', print: 'הדפסה / PDF',
+      doors: 'דלתות', doorsMmd: 'דלתות ממ"ד', mashMas: 'משקופי מסגרות', mashMmd: 'משקופי ממ"ד',
+      hipuy: 'פח חיפוי / חלון', misg: 'מסגרות (S4/ידני)', man: 'ידני:'
+    },
+    ru: {
+      dir: 'ltr', total: 'Всего комплектов', print: 'Печать / PDF',
+      doors: 'Двери', doorsMmd: 'Двери МАМАД', mashMas: 'Машкофы масгирут', mashMmd: 'Машкофы МАМАД',
+      hipuy: 'Пах хипуй / окно', misg: 'Мисгерот (S4/вручную)', man: 'Коррекция:'
+    }
+  };
+
+  async function loadData() {
+    try {
+      // Кэш сбрасывается меткой времени
+      const res = await fetch('data.json?t=' + Date.now());
+      reportData = await res.json();
+      renderUI();
+    } catch (e) {
+      console.warn("Локальный файл data.json еще не сгенерирован.");
+    }
+  }
+
+  function renderUI() {
+    if (!reportData) return;
+    const d = reportData;
+    document.getElementById('total-sets-val').innerText = d.total_sets;
+    document.getElementById('ui-shift-label').innerText = currentLang === 'he' ? d.shift_label_he : d.shift_label_ru;
+    document.getElementById('ui-parts-label').innerText = `${d.total_parts} ${currentLang === 'he' ? 'חלקים נחתכו/כופפו' : 'дет. согнуто'}`;
+
+    document.getElementById('v-doors-sets').innerText = d.summary.doors.sets;
+    document.getElementById('v-doors-parts').innerText = d.summary.doors.parts;
+    document.getElementById('v-doors-mmd-sets').innerText = d.summary.doors_mamad.sets;
+    document.getElementById('v-doors-mmd-parts').innerText = d.summary.doors_mamad.parts;
+    document.getElementById('v-mash-mas-sets').innerText = d.summary.mashkof_masgirut.sets;
+    document.getElementById('v-mash-mas-parts').innerText = d.summary.mashkof_masgirut.parts;
+    document.getElementById('v-mash-mmd-sets').innerText = d.summary.mashkof_mamad.sets;
+    document.getElementById('v-mash-mmd-parts').innerText = d.summary.mashkof_mamad.parts;
+    document.getElementById('v-hipuy-sets').innerText = d.summary.pah_hipuy.sets;
+    document.getElementById('v-hipuy-parts').innerText = d.summary.pah_hipuy.parts;
+
+    updateMisgeretDisplay();
+    drawChart();
+  }
+
+  function updateMisgeretDisplay() {
+    const base = reportData ? reportData.summary.misgeret.sets : 0;
+    document.getElementById('val-misg').innerText = base + manualOffset;
+  }
+
+  function adjustManual(delta) {
+    manualOffset += delta;
+    localStorage.setItem('palraz_manual_misg', manualOffset);
+    updateMisgeretDisplay();
+  }
+
+  function drawChart() {
+    if (!reportData) return;
+    const canvas = document.getElementById('perfChart');
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.parentElement.clientWidth;
+    const h = 160;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.scale(dpr, dpr);
+
+    const values = reportData.values;
+    const labels = reportData.labels;
+    const maxVal = Math.max(...values, 10);
+    const padX = 16, padY = 20;
+    const chartW = w - padX * 2, chartH = h - padY * 2;
+    ctx.clearRect(0, 0, w, h);
+
+    if (values.length < 2) return;
+    const stepX = chartW / (values.length - 1);
+    const points = values.map((val, idx) => ({
+      x: padX + idx * stepX,
+      y: h - padY - (val / maxVal) * chartH
+    }));
+
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    for (let i = 0; i < points.length - 1; i++) {
+      const xc = (points[i].x + points[i + 1].x) / 2;
+      const yc = (points[i].y + points[i + 1].y) / 2;
+      ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+    }
+    ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    points.forEach((pt, i) => {
+      ctx.fillStyle = values[i] === 0 ? '#ef4444' : '#22c55e';
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, 3.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '10px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(labels[i].slice(0, 2), pt.x, h - 4);
+    });
+  }
+
+  function toggleLang() {
+    currentLang = currentLang === 'he' ? 'ru' : 'he';
+    const t = i18n[currentLang];
+    document.documentElement.dir = t.dir;
+    document.documentElement.lang = currentLang;
+    document.getElementById('ui-total-label').innerText = t.total;
+    document.getElementById('ui-print').innerText = t.print;
+    document.getElementById('t-doors').innerText = t.doors;
+    document.getElementById('t-doors-mmd').innerText = t.doorsMmd;
+    document.getElementById('t-mash-mas').innerText = t.mashMas;
+    document.getElementById('t-mash-mmd').innerText = t.mashMmd;
+    document.getElementById('t-hipuy').innerText = t.hipuy;
+    document.getElementById('t-misg').innerText = t.misg;
+    document.getElementById('t-man').innerText = t.man;
+    renderUI();
+  }
+
+  function shareWhatsApp() {
+    if (!reportData) return;
+    const total = document.getElementById('total-sets-val').innerText;
+    const misgTotal = (reportData.summary.misgeret.sets) + manualOffset;
+    const text = encodeURIComponent(
+      `*PALRAZ Report | דוח ייצור*\n` +
+      `${reportData.shift_label_he}\n` +
+      `-------------------\n` +
+      `סה"כ סטים: ${total}\n` +
+      `דלתות: ${reportData.summary.doors.sets} סטים\n` +
+      `דלתות ממ"ד: ${reportData.summary.doors_mamad.sets} סטים\n` +
+      `משקופי מסגרות: ${reportData.summary.mashkof_masgirut.sets} סטים\n` +
+      `משקופי ממ"ד: ${reportData.summary.mashkof_mamad.sets} סטים\n` +
+      `פח חיפוי: ${reportData.summary.pah_hipuy.sets} יח'\n` +
+      `מסגרות: ${misgTotal} יח'`
+    );
+    window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+  }
+
+  window.addEventListener('resize', drawChart);
+  window.onload = loadData;
+  // Фоновый опрос каждые 60 секунд
+  setInterval(loadData, 60000);
+</script>
+</body>
+</html>

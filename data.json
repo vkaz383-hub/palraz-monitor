@@ -1,0 +1,67 @@
+{
+  "shift_num": 2,
+  "shift_label_ru": "Смена 2 (08.09 18:00 - 06:00)",
+  "shift_label_he": "משמרת 2 (08.09 18:00 - 06:00)",
+  "total_sets": 68,
+  "total_parts": 106,
+  "labels": [
+    "18:00",
+    "19:00",
+    "20:00",
+    "21:00",
+    "22:00",
+    "23:00",
+    "00:00",
+    "01:00",
+    "02:00",
+    "03:00",
+    "04:00",
+    "05:00",
+    "06:00"
+  ],
+  "values": [
+    50,
+    39,
+    17,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "summary": {
+    "doors": {
+      "parts": 0,
+      "sets": 0
+    },
+    "mashkof_masgirut": {
+      "parts": 0,
+      "sets": 0
+    },
+    "mashkof_mamad": {
+      "parts": 56,
+      "sets": 18
+    },
+    "doors_mamad": {
+      "parts": 0,
+      "sets": 0
+    },
+    "misgeret": {
+      "parts": 0,
+      "sets": 0
+    },
+    "pah_hipuy": {
+      "parts": 50,
+      "sets": 50
+    },
+    "other": {
+      "parts": 0,
+      "sets": 0
+    }
+  }
+}
