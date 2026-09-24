@@ -2,8 +2,8 @@
   "shift_num": 1,
   "shift_label_ru": "Смена 1 (24.09 06:30 - 16:00)",
   "shift_label_he": "משמרת 1 (24.09 06:30 - 16:00)",
-  "total_sets": 76,
-  "total_parts": 229,
+  "total_sets": 77,
+  "total_parts": 231,
   "labels": [
     "06:00",
     "07:00",
@@ -26,7 +26,7 @@
     30,
     21,
     36,
-    22
+    24
   ],
   "summary": {
     "doors": {
@@ -34,8 +34,8 @@
       "sets": 0
     },
     "mashkof_masgirut": {
-      "parts": 229,
-      "sets": 76
+      "parts": 231,
+      "sets": 77
     },
     "mashkof_mamad": {
       "parts": 0,
