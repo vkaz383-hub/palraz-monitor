@@ -1,53 +1,47 @@
 {
-  "shift_num": 2,
-  "shift_label_ru": "Смена 2 (08.10 16:00 - 01:30)",
-  "shift_label_he": "משמרת 2 (08.10 16:00 - 01:30)",
-  "total_sets": 115,
-  "total_parts": 234,
+  "shift_num": 1,
+  "shift_label_ru": "Смена 1 (09.10 06:30 - 13:00)",
+  "shift_label_he": "משמרת 1 (09.10 06:30 - 13:00)",
+  "total_sets": 66,
+  "total_parts": 170,
   "labels": [
-    "16:00",
-    "17:00",
-    "18:00",
-    "19:00",
-    "20:00",
-    "21:00",
-    "22:00",
-    "23:00",
-    "00:00",
-    "01:00"
+    "06:00",
+    "07:00",
+    "08:00",
+    "09:00",
+    "10:00",
+    "11:00",
+    "12:00"
   ],
   "values": [
-    30,
-    26,
+    15,
+    45,
     46,
-    39,
-    0,
-    23,
-    30,
-    19,
-    21,
-    0
+    20,
+    26,
+    12,
+    6
   ],
   "summary": {
     "doors": {
-      "parts": 0,
-      "sets": 0
+      "parts": 56,
+      "sets": 28
     },
     "mashkof_masgirut": {
-      "parts": 148,
-      "sets": 49
+      "parts": 114,
+      "sets": 38
     },
     "mashkof_mamad": {
-      "parts": 30,
-      "sets": 10
+      "parts": 0,
+      "sets": 0
     },
     "doors_mamad": {
       "parts": 0,
       "sets": 0
     },
     "misgeret": {
-      "parts": 56,
-      "sets": 56
+      "parts": 0,
+      "sets": 0
     },
     "pah_hipuy": {
       "parts": 0,
