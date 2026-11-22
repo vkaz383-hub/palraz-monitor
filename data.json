@@ -1,9 +1,9 @@
 {
   "shift_num": 1,
-  "shift_label_ru": "Смена 1 (20.11 06:30 - 13:00)",
-  "shift_label_he": "משמרת 1 (20.11 06:30 - 13:00)",
-  "total_sets": 35,
-  "total_parts": 105,
+  "shift_label_ru": "Смена 1 (22.11 06:30 - 16:00)",
+  "shift_label_he": "משמרת 1 (22.11 06:30 - 16:00)",
+  "total_sets": 21,
+  "total_parts": 56,
   "labels": [
     "06:00",
     "07:00",
@@ -11,25 +11,31 @@
     "09:00",
     "10:00",
     "11:00",
-    "12:00"
+    "12:00",
+    "13:00",
+    "14:00",
+    "15:00"
   ],
   "values": [
-    7,
-    20,
+    10,
+    30,
+    4,
+    4,
     8,
     0,
-    16,
-    30,
-    24
+    0,
+    0,
+    0,
+    0
   ],
   "summary": {
     "doors": {
-      "parts": 0,
-      "sets": 0
+      "parts": 17,
+      "sets": 8
     },
     "mashkof_masgirut": {
-      "parts": 105,
-      "sets": 35
+      "parts": 39,
+      "sets": 13
     },
     "mashkof_mamad": {
       "parts": 0,
